@@ -1,31 +1,32 @@
 import styles from '../assets/styles/layouts/Counter.module.scss';
-import { useState } from "react";
 
-function Counter(){
-    const [count, setCount] = useState(0);
-    const [inputValue, setInputValue] = useState(0);
-
-    const min = 0;
-    const max = 100;
+function Counter(
+    {
+        count, 
+        incrementCount, 
+        decrementCount, 
+        resetCount,
+        setCount
+    }
+    ){
 
     const handleSubmit = (e) => {
         e.preventDefault();
         console.log('formulaire soumis');
-
-        setCount(
-            (count + inputValue) < min ? 
-                0 
-                : 
-                (count + inputValue ) > max ? max : (count + inputValue )
-        );
+        // console.log("valeur input", new FormData(e.target).get('number'))
+        setCount(new FormData(e.target).get('number'));
     }
 
     const handleClickAddTen = () => {
-        setCount((count + 10) < min ? 
-                0 
-                : 
-                (count + 10 ) > max ? max : (count + 10 )
-        )
+        setCount(10);
+    }
+
+    const handleClickDecreaseFive = () => {
+        setCount(-5);
+    }
+
+    const handleInput = (e) => {
+        console.log(e.target.value);
     }
     return (
         <>
@@ -35,20 +36,16 @@ function Counter(){
                 onSubmit={handleSubmit}
                 action="#" 
                 method='POST'
-                className={`border border-3 w-50 m-auto gap-4 d-flex flex-column flex-md-row justify-content-md-around mt-5 p-5 ${styles.divButtons}`}
+                className={`border border-3 w-50 m-auto gap-4 d-flex flex-column flex-lg-row justify-content-md-around mt-5 p-5 ${styles.divButtons}`}
                 >
                     <button type='button' className="form-control" onClick={() => {
-                                        if(count > 0){
-                                            setCount(count-1)
-                                        }
-                                    }}>-</button>
-                    <button type='button' className="form-control" onClick={() => {
-                                    setCount(count+1)
+                                            incrementCount()
                                     }}>+</button>
-                    <button type='reset' className="form-control" onClick={() => setCount(0)}>Reset</button>
+                    <button type='button' className="form-control" onClick={() => decrementCount()}>-</button>
+                    <button type='reset' className="form-control" onClick={() => resetCount()}>Reset</button>
                     <button type='button' className="form-control" onClick={handleClickAddTen}>+10</button>
-                    <button type='button' className="form-control" onClick={() => count > 5 ? setCount(count - 5) : setCount(0)}>-5</button>
-                    <input type="number" className='form-control' placeholder='entrer un nombre' onInput={(e) => setInputValue(e.target.value*1)}/>
+                    <button type='button' className="form-control" onClick={handleClickDecreaseFive}>-5</button>
+                    <input type="number" name="number" className='form-control' onInput={handleInput} placeholder='entrer un nombre' />
             </form>
             </section>
             
