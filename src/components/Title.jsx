@@ -1,6 +1,6 @@
 const Title = () => {
     return (
-        <h1>Compteur</h1>
+        <h1 className="text-secondary">Exercices sur le hook useReducer</h1>
     );
 }
 

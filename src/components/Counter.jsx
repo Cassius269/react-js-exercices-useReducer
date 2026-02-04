@@ -5,16 +5,16 @@ function Counter(){
 
     return (
         <>
-            <h2>Contenu du compteur</h2>
-            <article className="bg-secondary">
-                <h3>{count}</h3>
+            <h2 className="text-primary">Contenu du compteur</h2>
+            <article>
+                <h3 className="text-secondary">{count}</h3>
                 <button onClick={() => {
                     if(count > 0){
                         setCount(count-1)
                     }
                 }}>-</button>
                 <button onClick={() => {
-                    setCount(count+1)
+                   setCount(count+1)
                 }}>+</button>
                 <button onClick={() => setCount(0)}>Reset</button>
                 <button onClick={() => setCount(count + 10)}>+10</button>
