@@ -1,13 +1,8 @@
-article {
-    background-color: red;
-    .divButtons button {
-        background-color: white !important;
-    }
-}
+@use '../utils//variables' as variables;
 
 section {
     form {
-        background-color: red;
+        background-color: variables.$info;
         .divButtons button {
             background-color: white !important;
         }
