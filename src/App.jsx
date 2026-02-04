@@ -1,12 +1,18 @@
-import './App.css'
+import Counter from "./components/Counter";
+import Footer from "./components/Footer";
+import Header from "./components/Header";
+import Title from "./components/Title";
 
 function App() {
 
   return (
     <>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <main>
+        <Header />
+        <Title />
+        <Counter />
+        <Footer />
+      </main>
     </>
   )
 }
