@@ -1,11 +1,11 @@
+import { useContext } from 'react';
 import styles from '../assets/styles/layouts/Counter.module.scss';
+import { CounterDispatcherContext, CounterStateContext } from '../context/CounterContext';
 
-function Counter(
-    {
-        count, 
-        dispatch
-    }
-    ){
+function Counter(){
+    // Récupérer le contexte de l'état du compteur
+    const count = useContext(CounterStateContext);
+    const dispatch = useContext(CounterDispatcherContext);
 
     const handleSubmit = (e) => {
         e.preventDefault();

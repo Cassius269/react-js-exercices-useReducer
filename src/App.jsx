@@ -5,6 +5,7 @@ import Title from "./components/Title";
 import './assets/styles/App.scss'; 
 import { useReducer } from "react";
 import counterReducer from "./reducers/CounterReducer";
+import { CounterDispatcherContext, CounterStateContext } from "./context/CounterContext";
 
 function App() {
   // Gérer le reducer depuis le composant racine <App>
@@ -12,19 +13,21 @@ function App() {
     count: 0, 
   });
 
+
   console.log("state", state.count);
 
   return (
     <>
-      <main>
+    <CounterStateContext value={state.count}>
+      <CounterDispatcherContext value={dispatch}>
         <Header />
-        <Title />
-        <Counter 
-          count={state.count} 
-          dispatch={dispatch}
-        />
+        <main>
+          <Title />
+          <Counter/>
+        </main>
         <Footer />
-      </main>
+        </CounterDispatcherContext>
+      </CounterStateContext>
     </>
   )
 }
