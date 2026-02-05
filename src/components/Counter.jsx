@@ -3,10 +3,7 @@ import styles from '../assets/styles/layouts/Counter.module.scss';
 function Counter(
     {
         count, 
-        incrementCount, 
-        decrementCount, 
-        resetCount,
-        setCount
+        dispatch
     }
     ){
 
@@ -14,19 +11,46 @@ function Counter(
         e.preventDefault();
         console.log('formulaire soumis');
         // console.log("valeur input", new FormData(e.target).get('number'))
-        setCount(new FormData(e.target).get('number'));
+        dispatch({
+            type:'SET_COUNT',
+            payload: new FormData(e.target).get('number')
+        })
+    }
+
+    const handleClickPlusOne = () => {
+        dispatch({
+                    type: 'INCREMENT_COUNT',
+            })
+    }
+
+    const handleClickSubstractOne = () => {
+        dispatch({
+                    type: 'DECREMENT_COUNT',
+            })
     }
 
     const handleClickAddTen = () => {
-        setCount(10);
+        dispatch({
+            type: 'SET_COUNT',
+            payload: 10
+      })
     }
 
     const handleClickDecreaseFive = () => {
-        setCount(-5);
+        dispatch({
+            type: 'SET_COUNT',
+            payload: -5
+      })    
     }
 
     const handleInput = (e) => {
-        console.log(e.target.value);
+        console.log(`Nombre saisi: ${e.target.value}`);
+    }
+
+    const resetCount = () => {
+        dispatch( {
+            type: 'RESET_COUNT'
+        })
     }
     return (
         <>
@@ -38,15 +62,13 @@ function Counter(
                 method='POST'
                 className={`border border-3 w-50 m-auto gap-4 d-flex flex-column flex-lg-row justify-content-md-around mt-5 p-5 ${styles.divButtons}`}
                 >
-                    <button type='button' className="form-control" onClick={() => {
-                                            incrementCount()
-                                    }}>+</button>
-                    <button type='button' className="form-control" onClick={() => decrementCount()}>-</button>
-                    <button type='reset' className="form-control" onClick={() => resetCount()}>Reset</button>
+                    <button type='button' className="form-control" onClick={handleClickPlusOne}>+</button>
+                    <button type='button' className="form-control" onClick={handleClickSubstractOne}>-</button>
+                    <button type='reset' className="form-control" onClick={resetCount}>Reset</button>
                     <button type='button' className="form-control" onClick={handleClickAddTen}>+10</button>
                     <button type='button' className="form-control" onClick={handleClickDecreaseFive}>-5</button>
                     <input type="number" name="number" className='form-control' onInput={handleInput} placeholder='entrer un nombre' />
-            </form>
+                </form>
             </section>
             
         </>

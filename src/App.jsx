@@ -14,32 +14,6 @@ function App() {
 
   console.log("state", state.count);
 
-    // Les méthodes de comptage et reset
-    const incrementCount = ()=> {
-      dispatch({
-        type: 'INCREMENT_COUNT'
-      })
-    }
-
-    const decrementCount = ()=> {
-      dispatch({
-        type: 'DECREMENT_COUNT'
-      })
-    } 
-    
-    const resetCount = ()=> {
-      dispatch({
-        type: 'RESET_COUNT'
-      })
-    }
-
-    const setCount = (number)=> {
-      dispatch({
-        type: 'SET_COUNT',
-        payload: number
-      })
-    }
-
   return (
     <>
       <main>
@@ -47,10 +21,7 @@ function App() {
         <Title />
         <Counter 
           count={state.count} 
-          incrementCount={incrementCount} 
-          decrementCount={decrementCount}  
-          resetCount={resetCount}
-          setCount={setCount}
+          dispatch={dispatch}
         />
         <Footer />
       </main>
