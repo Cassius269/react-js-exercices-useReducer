@@ -18,7 +18,7 @@ function CounterProvider({children}){
     return (
         <CounterStateContext value={state.count}>
                 <CounterDispatcherContext value={dispatch}>
-                    {children}
+                    {children}{/* children correspond  au composant enfant CounterFeature */}
                 </CounterDispatcherContext>
         </CounterStateContext>
     )
