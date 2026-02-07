@@ -1,14 +1,12 @@
 import './assets/styles/App.scss'; 
-import CounterFeature from './components/CounterFeature';
-import CounterProvider from './components/CounterProvider';
+import Body from './components/Body';
+
 
 function App() {
 
   return (
     <>
-      <CounterProvider>
-        <CounterFeature />
-      </CounterProvider>
+      <Body />
     </>
   )
 }

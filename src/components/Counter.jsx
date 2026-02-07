@@ -55,7 +55,8 @@ function Counter(){
     return (
         <>
             <section>
-                <h3 className="text-center">{count}</h3>
+                <h3 className="text-center">Exercice 1: un compteur intéractif</h3>
+                <h2 className="text-center">{count}</h2>
                 <form 
                 onSubmit={handleSubmit}
                 action="#" 

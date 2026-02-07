@@ -7,13 +7,8 @@ function CounterFeature(){
 
     return (
         <>
-                    <Header />
-                    <main>
-                        <Title />
-                        <Counter/>
-                    </main>
-                    <Footer />
-
+            <Title />
+            <Counter/>
         </>
     )
 }

@@ -19,7 +19,7 @@ function counterReducer(state, action){
             }
         case 'SET_COUNT':
             return {
-                count : (Math.max(0,Math.min(maxCount, state.count + action.payload*1))) // valeur doit être compris entre 0 et 100
+                count : (Math.max(0,Math.min(maxCount, state.count + action.payload*1))) // la valeur doit être compris entre 0 et 100
             }
         default :
             throw new Error('action inconnue');     

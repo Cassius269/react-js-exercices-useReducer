@@ -3,7 +3,7 @@ import Footer from "./Footer";
 import Header from "./Header";
 import Title from "./Title";
 import { useReducer } from "react";
-import counterReducer from "../reducers/CounterReducer";
+import counterReducer from "../reducers/counterReducer";
 import { CounterDispatcherContext, CounterStateContext } from "../context/CounterContext";
 
 function CounterProvider({children}){
