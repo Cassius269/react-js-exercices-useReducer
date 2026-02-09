@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import styles from '../assets/styles/layouts/Subscription.module.scss';
+import Toast from './Toast';
 
 function Subscription({state, goToPreviousStep, goToNextStep, submitForm}){
     console.log(`Etape point de vue reducer: ${state.step}`);
@@ -7,6 +8,8 @@ function Subscription({state, goToPreviousStep, goToNextStep, submitForm}){
     
     const [isFootChecked, setFootChecked] = useState(false);
     const [isBasketChecked, setBasketChecked] = useState(false);
+    const [isSubmitting, setSubmitting] = useState(false);
+
     const [formData, setFormData] = useState(
         {
             username: '', 
@@ -41,6 +44,7 @@ function Subscription({state, goToPreviousStep, goToNextStep, submitForm}){
                 const {passwordConfirm, ...submittedData} = formData; // Déconstruire l'objet l'état pour exclure le mot de passe de confirmation à l'envoi des données finales
 
                 submitForm(submittedData);
+                setSubmitting(true);
         }else {
             console.log('❌ Veuillez completer tous les champs')
         }
@@ -49,12 +53,14 @@ function Subscription({state, goToPreviousStep, goToNextStep, submitForm}){
 
     const handleInputUsername = (e) => {
         console.log(`Username: ${e.target.value}`);
-        setFormData({...formData, username: e.target.value})
+        setFormData({...formData, username: e.target.value});
+        setSubmitting(false);
     }
 
     const handleInputEmail = (e) => {
         console.log(`Email: ${e.target.value}`);
-        setFormData({...formData, email: e.target.value})
+        setFormData({...formData, email: e.target.value});
+        setSubmitting(false);
     }
 
     const handleInputPassword = (e) => {
@@ -64,17 +70,20 @@ function Subscription({state, goToPreviousStep, goToNextStep, submitForm}){
 
     const handleInputConfirmPassword = (e) => {
         console.log(`Mot de passe confirmé: ${e.target.value}`);  
-        setFormData({...formData, passwordConfirm: e.target.value})
+        setFormData({...formData, passwordConfirm: e.target.value});
+        setSubmitting(false);
     }
 
     const handleInputAddress = (e) => {
         console.log(`Changement adresse: ${e.target.value}`);  
         setFormData({...formData, address: e.target.value});
+        setSubmitting(false);
     }
 
     const handleChangeCity = (e) => {
         console.log(`Changement de ville: ${e.target.value}`);  
         setFormData({...formData, city: e.target.value});  
+        setSubmitting(false);
     }
 
     const onChangeFootChecked = () => {
@@ -85,6 +94,7 @@ function Subscription({state, goToPreviousStep, goToNextStep, submitForm}){
                 preferences: formData.preferences.includes('foot') ? [...formData.preferences.filter(p => p !== 'foot')] : [...formData.preferences, 'foot']
             }
         );
+        setSubmitting(false);
     };
 
     const onChangeBasketChecked = () => {
@@ -94,22 +104,26 @@ function Subscription({state, goToPreviousStep, goToNextStep, submitForm}){
                 ...formData, 
                 preferences: formData.preferences.includes('basket') ? [...formData.preferences.filter(p => p !== 'basket')] : [...formData.preferences, 'basket']
             });
+            setSubmitting(false);
         }
     
     const handleClickPreviousStep = (e) => {
         e.preventDefault();
         const previousStep = state.step  <= 1 ? state.step : state.step-1;
         goToPreviousStep(previousStep, formData);
+        setSubmitting(false);
     };
 
     const handleClickNextStep = (e) => {
         e.preventDefault();
         const nextStep = state.step >= 3 ? state.step : state.step+1;
         goToNextStep(nextStep, formData);
+        setSubmitting(false);
     };
 
     return (
         <section className="mt-5 mb-5">
+            {isSubmitting && <Toast message='Formulaire envoyé avec succès' /> } 
             <h3 className="text-center">Exercice 2 : formulaire d'inscription multi-étapes</h3>
             <form onSubmit={handleSubmit} action="#" method="POST" className={`mt-5 w-50 m-auto p-5 rounded-3 ${styles.form} position-relative`}>
                 <p className='position-absolute start-50 top-0 m-4 text-white bg-primary p-2 fs-5 rounded-5'>{state.step}/3</p>
