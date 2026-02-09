@@ -1,0 +1,17 @@
+@use '../utils/variables' as *;
+
+
+
+form {
+  input:invalid {
+    border: none;
+    outline: 2px solid red;
+    border-radius: 5px;
+  }
+
+  .divButtons {
+    .disabled {
+      visibility: hidden;
+    }
+  }
+}

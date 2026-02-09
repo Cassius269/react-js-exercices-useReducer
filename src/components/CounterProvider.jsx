@@ -1,7 +1,3 @@
-import Counter from "./Counter";
-import Footer from "./Footer";
-import Header from "./Header";
-import Title from "./Title";
 import { useReducer } from "react";
 import counterReducer from "../reducers/counterReducer";
 import { CounterDispatcherContext, CounterStateContext } from "../context/CounterContext";
@@ -13,7 +9,7 @@ function CounterProvider({children}){
   });
 
 
-  console.log("state", state.count);
+//   console.log("state du compteur", state.count);
   
     return (
         <CounterStateContext value={state.count}>
