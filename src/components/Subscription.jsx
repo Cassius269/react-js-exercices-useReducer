@@ -1,8 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import styles from '../assets/styles/layouts/Subscription.module.scss';
 import Toast from './Toast';
+import { SubscriptionDispatcherContext, SubscriptionStateContext } from '../context/SubscriptionContext';
 
-function Subscription({state, goToPreviousStep, goToNextStep, submitForm}){
+function Subscription(){
+    const state = useContext(SubscriptionStateContext);
+    const dispatch = useContext(SubscriptionDispatcherContext);
+
+    console.log('state :', state);
     console.log(`Etape point de vue reducer: ${state.step}`);
 
     
@@ -43,10 +48,16 @@ function Subscription({state, goToPreviousStep, goToNextStep, submitForm}){
                 console.log(`✅ Formulaire d'inscription soumis avec success`); 
                 const {passwordConfirm, ...submittedData} = formData; // Déconstruire l'objet l'état pour exclure le mot de passe de confirmation à l'envoi des données finales
 
-                submitForm(submittedData);
-                setSubmitting(true);
+                dispatch(
+                {
+                    type: 'SUBMIT_FORM',
+                    formData : submittedData, // la clé formData a pour valeur le formData passé en argument
+                }
+            )
+                   setSubmitting(true);
         }else {
-            console.log('❌ Veuillez completer tous les champs')
+            console.log('❌ Veuillez completer tous les champs');   
+            setSubmitting(false);         
         }
     };
 
@@ -110,20 +121,32 @@ function Subscription({state, goToPreviousStep, goToNextStep, submitForm}){
     const handleClickPreviousStep = (e) => {
         e.preventDefault();
         const previousStep = state.step  <= 1 ? state.step : state.step-1;
-        goToPreviousStep(previousStep, formData);
+        
+        dispatch({
+            type: 'PREVIOUS_STEP',
+            formData : formData,
+            step : previousStep
+        });
+
         setSubmitting(false);
     };
 
     const handleClickNextStep = (e) => {
         e.preventDefault();
         const nextStep = state.step >= 3 ? state.step : state.step+1;
-        goToNextStep(nextStep, formData);
+
+        dispatch({
+            type: 'NEXT_STEP',
+            formData : formData,
+            step : nextStep
+        });
+
         setSubmitting(false);
     };
 
     return (
         <section className="mt-5 mb-5">
-            {isSubmitting && <Toast message='Formulaire envoyé avec succès' /> } 
+            {isSubmitting  && <Toast message='Formulaire envoyé avec succès' /> } 
             <h3 className="text-center">Exercice 2 : formulaire d'inscription multi-étapes</h3>
             <form onSubmit={handleSubmit} action="#" method="POST" className={`mt-5 w-50 m-auto p-5 rounded-3 ${styles.form} position-relative`}>
                 <p className='position-absolute start-50 top-0 m-4 text-white bg-primary p-2 fs-5 rounded-5'>{state.step}/3</p>

@@ -3,7 +3,7 @@ import counterReducer from "../reducers/counterReducer";
 import { CounterDispatcherContext, CounterStateContext } from "../context/CounterContext";
 
 function CounterProvider({children}){
-    // Gérer le reducer depuis le composant racine <App>
+    // Gérer le reducer depuis le composant de provider du compteur
     const [state, dispatch] = useReducer(counterReducer, {
     count: 0, 
   });
