@@ -118,10 +118,8 @@ function Subscription(){
         const newEmail = e.target.value.trim();
         console.log(`Email: ${newEmail}`);
 
-        setFormData({...formData, email: newEmail});
-
         // Validation en temps réél de l'email
-        if(regexEmail.test(formData.email)){  
+        if(!regexEmail.test(newEmail)){  
             setErrors({
                 ...errors, 
                 email : 'Le mail doit être respecter la norme @ et .'
@@ -132,7 +130,8 @@ function Subscription(){
                 email : null
             });
         }
-
+         
+        setFormData({...formData, email: newEmail});
     }
 
     const handleInputPassword = (e) => {
