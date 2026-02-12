@@ -7,13 +7,19 @@ function Subscription(){
     const state = useContext(SubscriptionStateContext);
     const dispatch = useContext(SubscriptionDispatcherContext);
 
-    console.log('state :', state);
-    console.log(`Etape point de vue reducer: ${state.step}`);
+    console.log('Etat initial du reducer :', state);
+    console.log(`Etape du point de vue reducer: ${state.step}`);
 
     
     const [isFootChecked, setFootChecked] = useState(false);
     const [isBasketChecked, setBasketChecked] = useState(false);
-    const [isSubmitting, setSubmitting] = useState(false);
+    const [toastDetail, setToastDetail] = useState({
+        message: null, 
+        type: null,
+        id: null
+    });
+
+    console.log('détail du toast courant', toastDetail);
 
     const [formData, setFormData] = useState(
         {
@@ -26,75 +32,147 @@ function Subscription(){
             preferences: []       
         });
 
+    const [errors, setErrors] = useState({
+        username: null, 
+        email: null,
+        address: null, 
+        password: null,
+        city: null
+    });
+
+    const regexEmail = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+;
     const handleSubmit = (e) => {
         e.preventDefault();
-        // const formDataOriginal = new FormData(e.target);
-        
-        // for(let paire of formDataOriginal){
-        //     console.log(`${paire[0]} : ${paire[1]}`);
-            
-        // }
 
         // Contraintes de validation
-        const isValid =  formData.username.length >= 4 &&
-            formData.email.includes('@') && formData.email.includes('.') &&
+        const isValid =  formData.username.trim().length >= 4 &&
+            regexEmail.test(formData.email) &&
             formData.password.length >= 8 &&
             formData.passwordConfirm.length >= 8 &&
             formData.password === formData.passwordConfirm &&
-            formData.address.length >= 10 &&
+            formData.address.length >= 8 &&
             formData.city !== '';
 
         if(isValid){
-                console.log(`✅ Formulaire d'inscription soumis avec success`); 
-                const {passwordConfirm, ...submittedData} = formData; // Déconstruire l'objet l'état pour exclure le mot de passe de confirmation à l'envoi des données finales
+            console.log(`✅ Formulaire soumis et validé`); 
+            const {passwordConfirm, ...submittedData} = formData; // Déconstruire l'objet l'état pour exclure le mot de passe de confirmation à l'envoi des données finales
 
-                dispatch(
+            dispatch(
                 {
                     type: 'SUBMIT_FORM',
-                    formData : submittedData, // la clé formData a pour valeur le formData passé en argument
-                }
-            )
-                   setSubmitting(true);
+                    formData : submittedData, // la clé formData a pour valeur le formData passé en argument,
+                    isSubmitting: true
+            });
+
+           setToastDetail({
+            message: 'Formulaire envoyé avec succès',
+            type: 'success',
+            id: Date.now()
+           });
+
         }else {
             console.log('❌ Veuillez completer tous les champs');   
-            setSubmitting(false);         
+
+            // Mettre à jour les erreurs du formulaire dans le reducer avec le dispatch
+            dispatch({
+                type: 'SET_ERRORS', 
+                errors: errors
+            });
+
+           setToastDetail({
+            message: 'Formulaire non envoyé',
+            type: 'error', 
+            id: Date.now()
+           });
         }
     };
 
 
     const handleInputUsername = (e) => {
-        console.log(`Username: ${e.target.value}`);
-        setFormData({...formData, username: e.target.value});
-        setSubmitting(false);
+        const newUsername = e.target.value.trim();
+        console.log(`Username: ${newUsername}`);
+
+        setFormData({
+            ...formData, 
+            username: newUsername
+        });
+
+        // setSubmitting(false);
+    
+        // Validation en temps réél de l'email
+        if(newUsername.length < 4){
+            setErrors({
+                ...errors, 
+                username: 'Le nom d\'utilisateur doit avoir plus de 3 caractères'
+            })
+        }else {
+            setErrors({
+                ...errors, 
+                username: null
+            })
+        }
     }
 
     const handleInputEmail = (e) => {
-        console.log(`Email: ${e.target.value}`);
-        setFormData({...formData, email: e.target.value});
-        setSubmitting(false);
+        const newEmail = e.target.value.trim();
+        console.log(`Email: ${newEmail}`);
+
+        setFormData({...formData, email: newEmail});
+
+        // Validation en temps réél de l'email
+        if(regexEmail.test(formData.email)){  
+            setErrors({
+                ...errors, 
+                email : 'Le mail doit être respecter la norme @ et .'
+            });
+        }else {
+            setErrors({
+                ...errors, 
+                email : null
+            });
+        }
+
     }
 
     const handleInputPassword = (e) => {
-        console.log(`Mot de passe: ${e.target.value}`);    
-        setFormData({...formData, password: e.target.value})
+        const newPassword = e.target.value.trim();
+        console.log(`Mot de passe: ${newPassword}`); 
+
+        setFormData({...formData, password: newPassword})
     }
 
     const handleInputConfirmPassword = (e) => {
-        console.log(`Mot de passe confirmé: ${e.target.value}`);  
+        const newConfirmPassword = e.target.value.trim();
+        console.log(`Mot de passe confirmé: ${newConfirmPassword}`); 
+
         setFormData({...formData, passwordConfirm: e.target.value});
-        setSubmitting(false);
     }
 
     const handleInputAddress = (e) => {
-        console.log(`Changement adresse: ${e.target.value}`);  
-        setFormData({...formData, address: e.target.value});
-        setSubmitting(false);
+        const newAddress = e.target.value.trim();
+        console.log(`Changement adresse: ${newAddress}`);  
+
+        setFormData({...formData, address: newAddress});
+        
+        if(newAddress.length <= 8){
+            setErrors(
+                    {
+                        ...errors, 
+                        address: 'L\'adresse doit contenir plus de 8 caractères'
+                    }
+                )
+        }else {
+            setErrors({
+                ...errors,
+                address: null
+            })
+        }
     }
 
     const handleChangeCity = (e) => {
         console.log(`Changement de ville: ${e.target.value}`);  
         setFormData({...formData, city: e.target.value});  
-        setSubmitting(false);
     }
 
     const onChangeFootChecked = () => {
@@ -105,7 +183,6 @@ function Subscription(){
                 preferences: formData.preferences.includes('foot') ? [...formData.preferences.filter(p => p !== 'foot')] : [...formData.preferences, 'foot']
             }
         );
-        setSubmitting(false);
     };
 
     const onChangeBasketChecked = () => {
@@ -115,7 +192,6 @@ function Subscription(){
                 ...formData, 
                 preferences: formData.preferences.includes('basket') ? [...formData.preferences.filter(p => p !== 'basket')] : [...formData.preferences, 'basket']
             });
-            setSubmitting(false);
         }
     
     const handleClickPreviousStep = (e) => {
@@ -128,7 +204,6 @@ function Subscription(){
             step : previousStep
         });
 
-        setSubmitting(false);
     };
 
     const handleClickNextStep = (e) => {
@@ -140,13 +215,11 @@ function Subscription(){
             formData : formData,
             step : nextStep
         });
-
-        setSubmitting(false);
     };
 
     return (
         <section className="mt-5 mb-5">
-            {isSubmitting  && <Toast message='Formulaire envoyé avec succès' /> } 
+            {toastDetail.message  && <Toast key={toastDetail.id} message= {toastDetail.message} type={toastDetail.type === 'success' ? 'success' : 'danger'} /> } 
             <h3 className="text-center">Exercice 2 : formulaire d'inscription multi-étapes</h3>
             <form onSubmit={handleSubmit} action="#" method="POST" className={`mt-5 w-50 m-auto p-5 rounded-3 ${styles.form} position-relative`}>
                 <p className='position-absolute start-50 top-0 m-4 text-white bg-primary p-2 fs-5 rounded-5'>{state.step}/3</p>
@@ -161,10 +234,11 @@ function Subscription(){
                                 className="form-control"
                                 placeholder='entrer votre pseudo'
                                 minLength={4} 
-                                required
+                                // required
                                 value={formData?.username}
                             />
                         </div>
+                        {errors.username != null && <p className='text-danger'>{errors.username}</p>}
                         <div className="mb-4">
                             <label htmlFor="email" className="form-label">Email</label>
                             <input 
@@ -173,11 +247,13 @@ function Subscription(){
                                 name="email" 
                                 id="email"  
                                 className="form-control" 
-                                required
+                                // required
                                 placeholder='jean-dupont@exemple.com'
                                 value={formData?.email}
                                 />
                         </div>
+                        {errors.email && <p className='text-danger'>{errors.email}</p>}
+
                         <div className="mb-4">
                             <label htmlFor="password" className="form-label">Mot de passe</label>
                             <input 
@@ -186,7 +262,7 @@ function Subscription(){
                                 name="password" 
                                 id="password" 
                                 minLength={8} 
-                                required 
+                                // required 
                                 className="form-control"
                                 placeholder='************'
                                 value={formData?.password}
@@ -200,7 +276,7 @@ function Subscription(){
                                 name="confirm_password" 
                                 id="confirm_password" 
                                 minLength={8} 
-                                required 
+                                // required 
                                 className="form-control"
                                 placeholder='************'
                             />
@@ -220,7 +296,7 @@ function Subscription(){
                                 id="adresse" 
                                 className="form-control" 
                                 placeholder="2 rue de l'endroit fantastique"
-                                minLength={10} 
+                                minLength={8} 
                                 required
                                 value={formData?.address}
                             />
@@ -233,7 +309,8 @@ function Subscription(){
                                 <option value="Lyon">Lyon</option>
                                 <option value="Marseille">Marseille</option>
                             </select>
-                        </div>               
+                        </div> 
+                        {errors.address != null && <p className='text-danger'>{errors.address}</p>}              
                     </>
                 }
                 {

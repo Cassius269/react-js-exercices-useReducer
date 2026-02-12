@@ -25,6 +25,12 @@ function subscriptionReducer(state, action){
                 step: action.step, 
                 formData: action.formData
             }
+        case 'SET_ERRORS':
+            console.log('erreurs à envoyer');
+            return  {
+                ...state, 
+                errors: action.errors //récupérer les erreurs
+            }
         default:
             throw new Error(`L'action choisie n'existe pas`);
     }

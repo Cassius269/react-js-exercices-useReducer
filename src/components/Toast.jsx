@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-function Toast({ message }) {
+function Toast({ message, type }) {
     const [isOpened, setOpened] = useState(true);
 
     const handleClick = () => {
@@ -10,7 +10,7 @@ function Toast({ message }) {
   return (
         <>
           {isOpened &&  
-            (<div className="alert alert-success position-fixed top-0 end-0 m-3 shadow" 
+            (<div className={`alert alert-${type} position-fixed top-0 end-0 m-3 shadow`}
          style={{ zIndex: 9999, maxWidth: '350px' }}>
       <div className="d-flex justify-content-between align-items-center">
           <span>{message}</span> 
